@@ -1,0 +1,50 @@
+name: kitaplik
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & icons
+  cupertino_icons: ^1.0.6                                # latest
+
+  # Permissions & device |info
+  permission_handler: ^12.0.0+1                          # latest :contentReference[oaicite:0]{index=0}
+  device_info_plus: ^11.4.0                              # latest, needs Java 17+ :contentReference[oaicite:1]{index=1}
+
+  # File selection/opening
+  file_picker: ^10.1.2                                   # v2-embedding ready :contentReference[oaicite:2]{index=2}
+  open_file: ^3.5.10                                     # fixes many MIME issues on Android 13 + :contentReference[oaicite:3]{index=3}
+
+  # Lightweight persistence
+  shared_preferences: ^2.5.3                             # Dart 3.4 compatible :contentReference[oaicite:4]{index=4}
+
+  # PDF viewing
+  syncfusion_flutter_pdfviewer: ^29.1.40                 # April 2025 build (requires free Syncfusion licence) :contentReference[oaicite:5]{index=5}
+
+  # State management
+  provider: ^6.1.5                                       # Dart 3 generics clean-up :contentReference[oaicite:6]{index=6}
+
+  # Firebase & Google
+  firebase_core:  ^3.13.0                                # matches FlutterFire 2025-Q1 wave :contentReference[oaicite:7]{index=7}
+  firebase_auth: ^5.5.3                                  # minSdk 23+, Java 17+/21 OK :contentReference[oaicite:8]{index=8}
+  cloud_firestore: ^5.6.7                                # ID-based index rewrite :contentReference[oaicite:9]{index=9}
+  google_sign_in: ^6.3.0                                 # Web incremental-scopes ready :contentReference[oaicite:10]{index=10}
+
+  # Misc utilities
+  url_launcher: ^6.3.1                                   # last stable (still Flutter 3.22+) :contentReference[oaicite:11]{index=11}
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0                                  # latest Flutter-maintained set :contentReference[oaicite:12]{index=12}
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/                                            # make sure the folder exists
