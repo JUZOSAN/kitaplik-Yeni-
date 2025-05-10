@@ -11,7 +11,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      options: FirebaseOptions(
+          apiKey: "AIzaSyBUOK4EwbUmwjOf8ieOmccL_JFijsvnFUc",
+          authDomain: "kitappppp-f04a3.firebaseapp.com",
+          projectId: "kitappppp-f04a3",
+          storageBucket: "kitappppp-f04a3.firebasestorage.app",
+          messagingSenderId: "794287189815",
+          appId: "1:794287189815:web:ad89e612ba7acbf142b4b2",
+          measurementId: "G-1XQ4Q2RR2D"),
     );
   } catch (e) {
     print('Firebase başlatma hatası: $e');
@@ -97,11 +104,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
       print('Google ile giriş başarılı: ${_user?.email}');
     } catch (e) {
-      print('Google ile giriş hatası: $e');
+      String errorMessage = 'Bilinmeyen bir hata oluştu.';
+      if (e is FirebaseException) {
+        errorMessage = e.message ?? errorMessage;
+      } else if (e is Exception) {
+        errorMessage = e.toString();
+      }
+      print('Google ile giriş hatası: $errorMessage');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Giriş yapılırken bir hata oluştu: $e'),
+            content: Text('Giriş yapılırken bir hata oluştu: $errorMessage'),
             backgroundColor: Colors.red,
           ),
         );
@@ -248,7 +261,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Builder(
             builder: (context) => IconButton(
               icon: Icon(Icons.menu, color: Colors.blue.shade900),
-              onPressed: () {
+              onPressed: () async {
+                await _checkUser();
                 Scaffold.of(context).openEndDrawer();
               },
             ),
@@ -278,16 +292,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   accountEmail: Text(_user?.email ?? 'Giriş yapmadınız'),
-                  currentAccountPicture: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
+                  currentAccountPicture: _user?.photoURL != null
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(_user!.photoURL!),
+                          backgroundColor: Colors.white,
+                        )
                       : CircleAvatar(
                           backgroundColor: Colors.white,
-                          backgroundImage: _user?.photoURL != null
-                              ? NetworkImage(_user!.photoURL!)
-                              : null,
-                          child: _user?.photoURL == null
-                              ? Icon(Icons.person, color: Colors.blue.shade900)
-                              : null,
+                          child:
+                              Icon(Icons.person, color: Colors.blue.shade900),
                         ),
                 ),
               ),

@@ -9,8 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Navigation {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email'],
-    clientId:
-        '794287189815-pvfmf21nqqgl3u9kjb1o1he5jg285j16.apps.googleusercontent.com',
   );
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -80,11 +78,17 @@ class Navigation {
         );
       }
     } catch (e) {
-      print('Google ile giriş hatası: $e');
+      String errorMessage = 'Bilinmeyen bir hata oluştu.';
+      if (e is FirebaseException) {
+        errorMessage = e.message ?? errorMessage;
+      } else if (e is Exception) {
+        errorMessage = e.toString();
+      }
+      print('Google ile giriş hatası: $errorMessage');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Giriş yapılırken bir hata oluştu: ${e.toString()}'),
+            content: Text('Giriş yapılırken bir hata oluştu: $errorMessage'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),

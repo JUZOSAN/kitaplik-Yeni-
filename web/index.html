@@ -12,13 +12,16 @@
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
 
     This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
+    the --base-href argument provided to flutter build.
   -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+
+  <!-- Google Sign-In Client ID -->
+  <meta name="google-signin-client_id" content="794287189815-d22t7dp26cn7p5qv6je4uvk4r6bl9g8k.apps.googleusercontent.com">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -31,8 +34,28 @@
 
   <title>testb</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js"></script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUOK4EwbUmwjOf8ieOmccL_JFijsvnFUc",
+      authDomain: "kitappppp-f04a3.firebaseapp.com",
+      projectId: "kitappppp-f04a3",
+      storageBucket: "kitappppp-f04a3.firebasestorage.app",
+      messagingSenderId: "794287189815",
+      appId: "1:794287189815:web:ad89e612ba7acbf142b4b2",
+      measurementId: "G-1XQ4Q2RR2D"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 </body>
 </html>

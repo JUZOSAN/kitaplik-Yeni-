@@ -311,61 +311,22 @@ class _IndirilenKitaplarState extends State<IndirilenKitaplar> {
 
   void _pickFile(BuildContext context) async {
     try {
-      // Android 11+ için özel izin kontrolü
-      if (Platform.isAndroid) {
-        final androidInfo = await DeviceInfoPlugin().androidInfo;
-        final sdkInt = androidInfo.version.sdkInt;
-
-        if (sdkInt >= 30) {
-          // Android 11+ için MANAGE_EXTERNAL_STORAGE izni
-          var status = await Permission.manageExternalStorage.status;
-          if (!status.isGranted) {
-            status = await Permission.manageExternalStorage.request();
-          }
-
-          if (!status.isGranted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                    'Dosya seçmek için tüm dosyalara erişim izni gerekiyor'),
-                backgroundColor: Colors.red,
-              ),
-            );
-            if (await canLaunch('app-settings:')) {
-              await launch('app-settings:');
-            }
-            return;
-          }
-        } else {
-          // Android 10 ve altı için normal depolama izni
-          var status = await Permission.storage.status;
-          if (!status.isGranted) {
-            status = await Permission.storage.request();
-          }
-
-          if (!status.isGranted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Dosya seçmek için depolama izni gerekiyor'),
-                backgroundColor: Colors.red,
-              ),
-            );
-            if (await canLaunch('app-settings:')) {
-              await launch('app-settings:');
-            }
-            return;
-          }
-        }
-      }
-
+      print('Dosya seçici başlatılıyor...');
+      
+      // Basitleştirilmiş dosya seçici
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'epub', 'mobi'],
+        allowMultiple: false,
       );
 
+      print('Dosya seçici sonucu: ${result?.files.length ?? 0} dosya');
+      
       if (result != null && result.files.isNotEmpty) {
         String fileName = result.files.single.name;
         String? filePath = result.files.single.path;
+
+        print('Seçilen dosya: $fileName, Yol: $filePath');
 
         if (filePath != null) {
           setState(() {
@@ -377,22 +338,39 @@ class _IndirilenKitaplarState extends State<IndirilenKitaplar> {
           });
           await _saveKitaplar();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$fileName seçildi'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$fileName seçildi'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        } else {
+          print('Dosya yolu null');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Dosya yolu alınamadı'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
+      } else {
+        print('Dosya seçilmedi veya iptal edildi');
       }
-    } catch (e) {
-      print('Hata: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Dosya seçilirken bir hata oluştu'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } catch (e, stackTrace) {
+      print('Dosya seçme hatası: $e');
+      print('Hata detayı: $stackTrace');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Dosya seçilirken bir hata oluştu: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
